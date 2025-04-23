@@ -9,13 +9,20 @@ public class Snake {
 	private LinkedList<BodySegment> segments;
 	private double deltaX;
 	private double deltaY;
+	private boolean isGameOver = false;
+	
+	
 	
 	public Snake() {
-		//FIXME - set up the segments instance variable
-		deltaX = 0;
-		deltaY = 0;
+		segments = new LinkedList<>();
+		BodySegment Head = new BodySegment(0.5, 0.5, SEGMENT_SIZE);
+		segments.add(Head);
+//		deltaX = 0;
+//		deltaY = 0;
 	}
-	
+	public int getLength() {
+	    return segments.size();
+	}
 	public void changeDirection(int direction) {
 		if(direction == 1) { //up
 			deltaY = MOVEMENT_SIZE;
@@ -38,6 +45,38 @@ public class Snake {
 	 */
 	public void move() {
 		//FIXME
+		for (int i = segments.size() - 1; i > 0; i--) {
+            BodySegment current = segments.get(i);
+            BodySegment previous = segments.get(i - 1);
+            current.setX(previous.getX());
+            current.setY(previous.getY());
+		}
+		
+		 BodySegment head = segments.getFirst();
+	        head.setX(head.getX() + deltaX);
+	        head.setY(head.getY() + deltaY);
+//	        for (int i = 1; i < segments.size(); i++) {
+//	            BodySegment bodySegment = segments.get(i);
+//	            if (head.getX() == bodySegment.getX() && head.getY() == bodySegment.getY()) {
+//	                
+//	                System.out.println("Game Over!");
+//	                System.exit(0); 
+//	            }
+//	        }
+	        for (int i = 1; i < segments.size(); i++) {
+	            BodySegment bodySegment = segments.get(i);
+	            if (head.getX() == bodySegment.getX() && head.getY() == bodySegment.getY()) {
+	                // Snake collided with itself, set the game over flag
+	                isGameOver = true;
+	            }
+	        }
+//	        if (eatFood(f)) {
+//	            score++;
+//	        }
+	}
+	
+	public boolean isGameOver() {
+		return isGameOver;
 	}
 	
 	/**
@@ -45,6 +84,9 @@ public class Snake {
 	 */
 	public void draw() {
 		//FIXME
+		for (BodySegment segment : segments) {
+            segment.draw();
+        }
 	}
 	
 	/**
@@ -53,8 +95,16 @@ public class Snake {
 	 * @return true if the snake successfully ate the food
 	 */
 	public boolean eatFood(Food f) {
-		//FIXME
-		return false;
+		BodySegment head = segments.getFirst();
+        double distance = Math.sqrt(Math.pow(head.getX() - f.getX(), 2) + Math.pow(head.getY() - f.getY(), 2));
+
+        if (distance < (SEGMENT_SIZE + Food.FOOD_SIZE) / 2) {
+            // If the distance is less than the sum of radii, they overlap
+            segments.add(new BodySegment(0, 0, SEGMENT_SIZE)); // Add a new body segment
+            return true;
+        }
+
+        return false;
 	}
 	
 	/**
@@ -63,6 +113,7 @@ public class Snake {
 	 */
 	public boolean isInbounds() {
 		//FIXME
-		return true;
+		BodySegment head = segments.getFirst();
+        return head.getX() >= 0 && head.getX() <= 1 && head.getY() >= 0 && head.getY() <= 1;
 	}
 }

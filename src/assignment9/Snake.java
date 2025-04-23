@@ -99,8 +99,8 @@ public class Snake {
         double distance = Math.sqrt(Math.pow(head.getX() - f.getX(), 2) + Math.pow(head.getY() - f.getY(), 2));
 
         if (distance < (SEGMENT_SIZE + Food.FOOD_SIZE) / 2) {
-            // If the distance is less than the sum of radii, they overlap
-            segments.add(new BodySegment(0, 0, SEGMENT_SIZE)); // Add a new body segment
+        	BodySegment tail = segments.getLast();
+            segments.add(new BodySegment(tail.getX(), tail.getY(), SEGMENT_SIZE)); // Add a new body segment
             return true;
         }
 

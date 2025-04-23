@@ -68,10 +68,7 @@ public class Game {
 		
 		StdDraw.setPenColor(Color.WHITE);
 	    StdDraw.text(0.9, 0.95, "Score: " + this.score);
-	    if(!snake.isInbounds() || snake.isGameOver()) {
-	    	StdDraw.setPenColor(Color.white);
-			StdDraw.text(0.5, 0.5, "!GAME OVER!");
-	    }
+	    
 	    StdDraw.show();
 	
 	}
